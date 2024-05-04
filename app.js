@@ -297,7 +297,7 @@ async function listItem(title, description, price) {
         const accounts = await web3.eth.getAccounts();
         const transaction = await marketplaceContract.methods.listNewItem(title, description, web3.utils.toWei(price, "ether")).send({ from: accounts[0] });
         console.log("Item listed successfully!");
-        openPopup("Item listed successfully! Transaction hash: " + transaction.transactionHash);
+        openListingPopup(transaction.transactionHash);
         document.getElementById('listItemForm').reset(); // Clear the form
     } catch (error) {
         console.error("Error listing item:", error);
@@ -305,8 +305,15 @@ async function listItem(title, description, price) {
     }
 }
 
-function openPopup(message) {
-    document.getElementById('popupMessage').innerText = message;
+function openListingPopup(hash) {
+    let message = `Item Listed Successfully! <br> Transaction Hash: ${hash}. <br> <a href="https://sepolia.etherscan.io/tx/${hash}" target="_blank">View on Etherscan</a>`
+    document.getElementById('popupMessage').innerHTML = message;
+    document.getElementById('popup').style.display = "block";
+}
+
+function openPurchasingingPopup(hash) {
+    let message = `Item Listed Successfully! <br> Transaction Hash: ${hash}. <br> <a href="https://sepolia.etherscan.io/tx/${hash}" target="_blank">View on Etherscan</a>`
+    document.getElementById('popupMessage').innerHTML = message;
     document.getElementById('popup').style.display = "block";
 }
 
@@ -332,7 +339,7 @@ async function purchaseItem(id, price) {
         const accounts = await web3.eth.getAccounts();
         transaction = await marketplaceContract.methods.purchaseItem(id).send({ from: accounts[0], value: price });
         console.log("Item purchased successfully!");
-        openPopup("Item purchased successfully! Transaction hash: " + transaction.transactionHash);
+        openPurchasingingPopup(transaction.transactionHash);
         showBuyItem();
     } catch (error) {
         console.error("Error purchasing item:", error);
