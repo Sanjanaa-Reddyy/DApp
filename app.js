@@ -306,13 +306,13 @@ async function listItem(title, description, price) {
 }
 
 function openListingPopup(hash) {
-    let message = `Item Listed Successfully! <br> Transaction Hash: ${hash}. <br> <a href="https://sepolia.etherscan.io/tx/${hash}" target="_blank">View on Etherscan</a>`
+    let message = `Item listed successfully! <br>x Transaction Hash: ${hash}. <br> <a href="https://sepolia.etherscan.io/tx/${hash}" target="_blank">View on Etherscan</a>`
     document.getElementById('popupMessage').innerHTML = message;
     document.getElementById('popup').style.display = "block";
 }
 
 function openPurchasingingPopup(hash) {
-    let message = `Item Listed Successfully! <br> Transaction Hash: ${hash}. <br> <a href="https://sepolia.etherscan.io/tx/${hash}" target="_blank">View on Etherscan</a>`
+    let message = `Item purchased successfully! <br> Transaction Hash: ${hash}. <br> <a href="https://sepolia.etherscan.io/tx/${hash}" target="_blank">View on Etherscan</a>`
     document.getElementById('popupMessage').innerHTML = message;
     document.getElementById('popup').style.display = "block";
 }
