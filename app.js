@@ -1,4 +1,4 @@
-const contractAddress = '0xB514051ebef3dB9e81543f63045A1EB60FA2dbc9'; // Replace with your contract address
+const contractAddress = '0x0bb9EA9E43BA4c9f1582dE8D9c3C9F541F76457F'; // Replace with your contract address
 const abi = [
 	{
 		"anonymous": false,
@@ -73,42 +73,6 @@ const abi = [
 		],
 		"name": "ItemPurchased",
 		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_title",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_description",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_price",
-				"type": "uint256"
-			}
-		],
-		"name": "listNewItem",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "purchaseItem",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -234,6 +198,42 @@ const abi = [
 	{
 		"inputs": [
 			{
+				"internalType": "string",
+				"name": "_title",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
+			}
+		],
+		"name": "listNewItem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "purchaseItem",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "",
 				"type": "address"
@@ -274,9 +274,7 @@ async function connectWallet() {
         try {
             //await window.ethereum.enable();
             accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
-            console.log("Wallet connected:", await web3.eth.getAccounts());
             marketplaceContract = new web3.eth.Contract(abi, contractAddress);
-            console.log("Contract connected:", marketplaceContract.options.address);
             document.getElementById('connectWallet').innerText = "Wallet Connected";
             document.getElementById('connectWallet').disabled = true;
             document.getElementById('listNewItemBtn').style.display = "inline-block";
@@ -287,7 +285,6 @@ async function connectWallet() {
             alert("Error connecting to wallet. Please check the console for details.");
         }
     } else {
-        console.log("Please install MetaMask.");
         alert("Please install MetaMask.");
     }
 }
@@ -296,7 +293,6 @@ async function listItem(title, description, price) {
     try {
         const accounts = await web3.eth.getAccounts();
         const transaction = await marketplaceContract.methods.listNewItem(title, description, web3.utils.toWei(price, "ether")).send({ from: accounts[0] });
-        console.log("Item listed successfully!");
         openListingPopup(transaction.transactionHash);
         document.getElementById('listItemForm').reset(); // Clear the form
     } catch (error) {
@@ -306,7 +302,7 @@ async function listItem(title, description, price) {
 }
 
 function openListingPopup(hash) {
-    let message = `Item listed successfully! <br>x Transaction Hash: ${hash}. <br> <a href="https://sepolia.etherscan.io/tx/${hash}" target="_blank">View on Etherscan</a>`
+    let message = `Item listed successfully! <br> Transaction Hash: ${hash}. <br> <a href="https://sepolia.etherscan.io/tx/${hash}" target="_blank">View on Etherscan</a>`
     document.getElementById('popupMessage').innerHTML = message;
     document.getElementById('popup').style.display = "block";
 }
@@ -338,7 +334,6 @@ async function purchaseItem(id, price) {
     try {
         const accounts = await web3.eth.getAccounts();
         transaction = await marketplaceContract.methods.purchaseItem(id).send({ from: accounts[0], value: price });
-        console.log("Item purchased successfully!");
         openPurchasingingPopup(transaction.transactionHash);
         showBuyItem();
     } catch (error) {
@@ -357,8 +352,8 @@ async function displayItems() {
         if (!item.purchased && item.owner.toLowerCase() !== accounts[0].toLowerCase()) {
             const itemCard = document.createElement('div');
             itemCard.innerHTML = `
-                <h3>${item.title}</h3>
-                <p>${item.description}</p>
+                <h3>${he.encode(item.title)}</h3>
+                <p>${he.encode(item.description)}</p>
                 <p>Price: ${web3.utils.fromWei(item.price, 'ether')} ETH</p>
                 <button onclick="purchaseItem(${item.id}, ${item.price})">Purchase</button>
             `;
@@ -380,8 +375,8 @@ async function displayOwnedItems() {
             const itemCard = document.createElement('div');
             //itemCard.innerHTML 
             let data = `
-                <h3>${item.title}</h3>
-                <p>${item.description}</p>
+                <h3>${he.encode(item.title)}</h3>
+                <p>${he.encode(item.description)}</p>
                 <p>Price: ${web3.utils.fromWei(item.price, 'ether')} ETH</p>
                 
             `;
@@ -417,4 +412,3 @@ function showOwned() {
     document.getElementById('ownedSection').style.display = "block";
     displayOwnedItems();
 }
-
